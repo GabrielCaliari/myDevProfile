@@ -6,8 +6,10 @@ import {
   CreateAccountTitle,
   ForgotPasswordButton,
   ForgotPasswordTitle,
-  Icon,
+  IconEye,
+  IconLogin,
   Logo,
+  PassWord,
   Title,
 } from './styles';
 
@@ -16,6 +18,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  TextInputProps,
   View,
 } from 'react-native';
 import { Button } from '../../components/Form/Button';
@@ -35,14 +38,22 @@ interface IFormInputs {
   [name: string]: any;
 }
 
+interface InputProps extends TextInputProps {
+  secureTextEntry?: boolean;
+}
+
 const formSchema = yup.object({
   email: yup.string().email('Email inválido.').required('Informe o email.'),
   password: yup.string().required('Informe a senha.'),
 });
 
-export const SignIn: React.FC = () => {
+export const SignIn = ({ secureTextEntry }: InputProps) => {
   const { signIn } = useAuth();
   const [loading, setLoading] = useState(false);
+  const [currentSecure, setCurrentSecure] = useState<boolean>(
+    !!secureTextEntry,
+  );
+
   const {
     handleSubmit,
     control,
@@ -72,6 +83,10 @@ export const SignIn: React.FC = () => {
     }
   };
 
+  const handleOnPressEye = () => {
+    setCurrentSecure(current => !current);
+  };
+
   return (
     <KeyboardAvoidingView
       enabled
@@ -97,14 +112,22 @@ export const SignIn: React.FC = () => {
               keyboardType="email-address"
               error={errors.email && errors.email.message}
             />
-            <InputControl
-              control={control}
-              name="password"
-              placeholder="Senha"
-              autoCorrect={false}
-              secureTextEntry
-              error={errors.password && errors.password.message}
-            />
+            <PassWord>
+              <InputControl
+                control={control}
+                name="password"
+                placeholder="Senha"
+                autoCorrect={false}
+                secureTextEntry={currentSecure}
+                error={errors.password && errors.password.message}
+              />
+              <IconEye
+                onPress={handleOnPressEye}
+                name={currentSecure ? 'eye' : 'eye-off'}
+                size={20}
+                color="white"
+              />
+            </PassWord>
             <Button
               title="Entrar"
               disabled={loading || errors.email || errors.password}
@@ -118,7 +141,7 @@ export const SignIn: React.FC = () => {
         </Container>
       </ScrollView>
       <CreateAccount onPress={handleCreateAccount}>
-        <Icon name="log-in" />
+        <IconLogin name="log-in" />
         <CreateAccountTitle>Criar uma conta</CreateAccountTitle>
       </CreateAccount>
     </KeyboardAvoidingView>

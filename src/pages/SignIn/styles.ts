@@ -36,7 +36,7 @@ export const ForgotPasswordTitle = styled.Text`
   color: ${({ theme }) => theme.colors.gray500};
 `;
 
-export const Icon = styled(Feather)`
+export const IconLogin = styled(Feather)`
   font-size: ${RFValue(20)}px;
   color: ${({ theme }) => theme.colors.primary};
 `;
@@ -59,4 +59,16 @@ export const CreateAccountTitle = styled.Text`
   font-size: ${RFValue(18)}px;
   color: ${({ theme }) => theme.colors.primary};
   margin-left: 16px;
+`;
+
+export const IconEye = styled(Feather)`
+  position: absolute;
+  right: 14px;
+  top: 20px;
+`;
+
+export const PassWord = styled.View`
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 `;

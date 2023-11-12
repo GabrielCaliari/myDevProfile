@@ -37,7 +37,6 @@ interface ScreenNavigationProp {
 interface IFormInputs {
   [name: string]: any;
 }
-
 interface InputProps extends TextInputProps {
   secureTextEntry?: boolean;
 }
@@ -93,10 +92,7 @@ export const SignIn = ({ secureTextEntry }: InputProps) => {
       style={{ flex: 1 }}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <ScrollView
-        keyboardShouldPersistTaps="handled"
-        contentContainerStyle={{ flex: 1 }}
-      >
+      <ScrollView contentContainerStyle={{ flex: 1 }}>
         <Container>
           <Content>
             <Logo source={logo} />

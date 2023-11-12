@@ -78,3 +78,9 @@ export const BackToSignInTitle = styled.Text`
   color: ${({ theme }) => theme.colors.primary};
   margin-top: 0px;
 `;
+
+export const IconEye = styled(Feather)`
+  position: absolute;
+  right: 14px;
+  top: 20px;
+`;

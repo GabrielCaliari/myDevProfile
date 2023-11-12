@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Container,
   GoBackButton,
@@ -8,6 +8,7 @@ import {
   Content,
   Title,
   Header,
+  IconEye,
 } from './styles';
 
 import {
@@ -15,6 +16,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  TextInputProps,
 } from 'react-native';
 import { Button } from '../../components/Form/Button';
 
@@ -26,6 +28,7 @@ import { InputControl } from '../../components/Form/InputControl';
 import { api } from '../../services/api';
 import { useAuth } from '../../contexts/AuthContext';
 import avatarDefault from '../../assets/avatar02.png';
+import { PassWord } from '../SignIn/styles';
 
 export interface ScreenNavigationProp {
   goBack: () => void;
@@ -33,6 +36,10 @@ export interface ScreenNavigationProp {
 
 interface IFormInputs {
   [name: string]: any;
+}
+
+interface InputProps extends TextInputProps {
+  secureTextEntry?: boolean;
 }
 
 const formSchema = yup.object({
@@ -44,9 +51,14 @@ const formSchema = yup.object({
     .oneOf([yup.ref('password'), null], 'Confirmação incorreta'),
 });
 
-export const UserProfilePassword: React.FC = () => {
+export const UserProfilePassword: React.FC = ({
+  secureTextEntry,
+}: InputProps) => {
   const { user, updateUser } = useAuth();
   const { goBack } = useNavigation<ScreenNavigationProp>();
+  const [currentSecure, setCurrentSecure] = useState<boolean>(
+    !!secureTextEntry,
+  );
   const {
     handleSubmit,
     control,
@@ -72,6 +84,10 @@ export const UserProfilePassword: React.FC = () => {
     } catch (error) {
       Alert.alert('Erro ao atualizar', 'Ocorreu um erro ao atualizar a senha.');
     }
+  };
+
+  const handleOnPressEye = () => {
+    setCurrentSecure(current => !current);
   };
 
   return (
@@ -116,18 +132,26 @@ export const UserProfilePassword: React.FC = () => {
               placeholder="Nova senha"
               error={errors.password && errors.password.message}
             />
-            <InputControl
-              autoCapitalize="none"
-              autoCorrect={false}
-              control={control}
-              secureTextEntry
-              name="password_confirmation"
-              placeholder="Confirmar senha"
-              error={
-                errors.password_confirmation &&
-                errors.password_confirmation.message
-              }
-            />
+            <PassWord>
+              <InputControl
+                autoCapitalize="none"
+                autoCorrect={false}
+                control={control}
+                secureTextEntry={currentSecure}
+                name="password_confirmation"
+                placeholder="Confirmar senha"
+                error={
+                  errors.password_confirmation &&
+                  errors.password_confirmation.message
+                }
+              />
+              <IconEye
+                onPress={handleOnPressEye}
+                name={currentSecure ? 'eye' : 'eye-off'}
+                size={20}
+                color="white"
+              />
+            </PassWord>
             <Button
               title="Salvar alterações"
               onPress={handleSubmit(handleUpdatePasswordEdit)}
